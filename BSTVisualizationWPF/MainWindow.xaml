@@ -1,0 +1,174 @@
+﻿<Window x:Class="BSTVisualizationWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:BSTVisualizationWPF"
+        Title="Визуализация бинарного дерева поиска (BST) — Лабораторная №3" 
+        MinHeight="550" MinWidth="750"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="MainAccentBrush" Color="#2E75B6" />
+        <SolidColorBrush x:Key="WhiteTextBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="NoticeCardBrush" Color="#FFFFEE" />
+        <SolidColorBrush x:Key="ListBgBrush" Color="#F4FFF4" />
+        <SolidColorBrush x:Key="BorderLightBrush" Color="#CCCCCC" />
+    </Window.Resources>
+
+    <Window.CommandBindings>    
+        <CommandBinding Command="{x:Static local:MainWindow.RunCommand}" 
+                        Executed="RunCommand_Executed" />
+
+        <CommandBinding Command="{x:Static local:MainWindow.PrevCommand}" 
+                        Executed="PrevCommand_Executed" 
+                        CanExecute="PrevCommand_CanExecute" />
+
+        <CommandBinding Command="{x:Static local:MainWindow.NextCommand}" 
+                        Executed="NextCommand_Executed" 
+                        CanExecute="NextCommand_CanExecute" />
+
+        <CommandBinding Command="{x:Static local:MainWindow.AboutCommand}" 
+                        Executed="AboutCommand_Executed" />
+
+        <CommandBinding Command="ApplicationCommands.Close" 
+                        Executed="ExitCommand_Executed" />
+    </Window.CommandBindings>
+
+
+    <DockPanel LastChildFill="True">
+
+        <Menu DockPanel.Dock="Top" Background="#F0F0F0" Padding="8,4">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="_Выход" Command="ApplicationCommands.Close" />
+            </MenuItem>
+            <MenuItem Header="_Справка">
+                <MenuItem Header="_Описание алгоритма" Command="{x:Static local:MainWindow.AboutCommand}" />
+            </MenuItem>
+        </Menu>
+
+
+        <StatusBar DockPanel.Dock="Bottom" Background="#EBEBEB" Padding="8,4">
+            <StatusBarItem>
+                <TextBlock x:Name="tbStatus" Text="Готов к работе" FontSize="11" Foreground="#444444" />
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock x:Name="tbStepInfo" Text="Шаг: —" FontSize="11" FontWeight="Bold" />
+            </StatusBarItem>
+        </StatusBar>
+
+
+        <Grid Margin="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" MinWidth="240" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2*" MinWidth="350" />
+            </Grid.ColumnDefinitions>
+
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Параметры алгоритма" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Элементы дерева:" Margin="0,4,0,2" />
+                    <TextBox x:Name="txtElements" Text="50, 30, 70, 20, 40, 60, 80" Padding="6,4" Margin="0,0,0,8" />
+
+                    <TextBlock Text="Быстрый выбор пресета:" FontSize="10" Foreground="#666666" Margin="0,0,0,4" />
+                    <WrapPanel Margin="0,0,0,8">
+                        <Button Content="Простой" Click="PresetSimple_Click" Padding="8,2" Margin="0,0,4,4" />
+                        <Button Content="Сбалансированный" Click="PresetBalanced_Click" Padding="8,2" Margin="0,0,4,4" />
+                        <Button Content="Вырожденный" Click="PresetDegenerate_Click" Padding="8,2" Margin="0,0,4,4" />
+                    </WrapPanel>
+
+                    <TextBlock Text="Значение для удаления:" Margin="0,4,0,2" />
+                    <TextBox x:Name="txtDeleteValue" Text="30" Padding="6,4" Margin="0,0,0,8" />
+
+                    <TextBlock Text="Тип обхода дерева:" Margin="0,4,0,2" />
+                    <ComboBox x:Name="cmbTraversal" Margin="0,0,0,12" SelectedIndex="0" Padding="6,4">
+                        <ComboBoxItem Content="Симметричный (LNR)" />
+                        <ComboBoxItem Content="Прямой (NLR)" />
+                        <ComboBoxItem Content="Обратный (LRN)" />
+                    </ComboBox>
+
+
+                    <Button Content="Запустить визуализацию" 
+                            Command="{x:Static local:MainWindow.RunCommand}"
+                            Background="{StaticResource MainAccentBrush}"
+                            Foreground="{StaticResource WhiteTextBrush}"
+                            FontWeight="Bold" Padding="12,8" Margin="0,0,0,12" 
+                            HorizontalAlignment="Stretch" />
+
+                    <Separator Margin="0,0,0,12" />
+                </StackPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Результат обхода:" FontWeight="SemiBold" Margin="0,0,0,4" />
+                    <ListBox Grid.Row="1" x:Name="lstTraversal" 
+                             Background="{StaticResource ListBgBrush}" 
+                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                </Grid>
+            </Grid>
+
+            <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Center" 
+                          VerticalAlignment="Stretch" Background="#E0E0E0" Margin="6,0" Cursor="SizeWE" />
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" MinHeight="180" />
+                    <RowDefinition Height="1*" MinHeight="100" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="#FAFAFA" 
+                        BorderBrush="{StaticResource BorderLightBrush}" 
+                        BorderThickness="1" Margin="0,0,0,8">
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <TextBlock x:Name="txtCanvasPlaceholder" 
+                                   Text="Нажмите «Запустить визуализацию»" 
+                                   Foreground="#999999" FontStyle="Italic" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Описание текущего шага:" FontWeight="SemiBold" Margin="0,0,0,4" />
+
+                    <Border Grid.Row="1" 
+                            Background="{StaticResource NoticeCardBrush}" 
+                            BorderBrush="{StaticResource BorderLightBrush}" 
+                            BorderThickness="1" Padding="8">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="txtStepDescription" 
+                                       Text="Нажмите «Запустить визуализацию» для начала демонстрации." 
+                                       TextWrapping="Wrap" />
+                        </ScrollViewer>
+                    </Border>
+
+                    <UniformGrid Grid.Row="2" Columns="2" Margin="0,8,0,0">
+                        <Button Content="◄ Назад" 
+                                Command="{x:Static local:MainWindow.PrevCommand}" 
+                                Padding="12,6" Margin="0,0,4,0" />
+                        <Button Content="Вперёд ►" 
+                                Command="{x:Static local:MainWindow.NextCommand}" 
+                                Padding="12,6" Margin="4,0,0,0" />
+                    </UniformGrid>
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>
