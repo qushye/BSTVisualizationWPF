@@ -7,9 +7,9 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <LinearGradientBrush x:Key="PrimaryGradientBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#2E75B6" Offset="0.0" />
-            <GradientStop Color="#1B4F72" Offset="1.0" />
+        <LinearGradientBrush x:Key="PrimaryGradientBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#3B82F6" Offset="0.0" />
+            <GradientStop Color="#1E3A8A" Offset="1.0" />
         </LinearGradientBrush>
 
         <SolidColorBrush x:Key="WhiteTextBrush" Color="#FFFFFF" />
@@ -19,16 +19,32 @@
 
         <Style x:Key="NavButtonStyle" TargetType="Button">
             <Setter Property="Padding" Value="12,6" />
-            <Setter Property="Background" Value="#F5F5F5" />
-            <Setter Property="BorderBrush" Value="#BBBBBB" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="#1E293B" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#E2E8F0" />
-                    <Setter Property="BorderBrush" Value="#2E75B6" />
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="btnBorder" 
+                                Background="#F1F5F9" 
+                                BorderBrush="#94A3B8" 
+                                BorderThickness="1" 
+                                CornerRadius="4" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="btnBorder" Property="Background" Value="#2563EB" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="btnBorder" Property="Opacity" Value="0.4" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -115,7 +131,13 @@
                     <TextBlock Grid.Row="0" Text="Результат обхода:" FontWeight="SemiBold" Margin="0,0,0,4" />
                     <ListBox Grid.Row="1" x:Name="lstTraversal" 
                              Background="{StaticResource ListBgBrush}" 
-                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="IsHitTestVisible" Value="False"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
                 </Grid>
             </Grid>
 
