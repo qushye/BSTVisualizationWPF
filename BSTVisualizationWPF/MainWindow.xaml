@@ -46,6 +46,31 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="RunButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryGradientBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource WhiteTextBrush}" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="FontSize" To="14" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.4" Storyboard.TargetProperty="FontSize" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Window.CommandBindings>
@@ -114,9 +139,8 @@
 
                     <Button Content="Запустить визуализацию" 
                             Command="{x:Static local:MainWindow.RunCommand}"
-                            Background="{StaticResource PrimaryGradientBrush}"
-                            Foreground="{StaticResource WhiteTextBrush}"
-                            FontWeight="Bold" Padding="12,8" Margin="0,0,0,12" 
+                            Style="{StaticResource RunButtonStyle}"
+                            Margin="0,0,0,12" 
                             HorizontalAlignment="Stretch" />
 
                     <Separator Margin="0,0,0,12" />
