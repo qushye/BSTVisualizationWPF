@@ -1,11 +1,11 @@
-﻿using System.Windows;
+﻿using System.Media;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BSTVisualizationWPF
 {
     public partial class MainWindow : Window
     {
-
         public static readonly RoutedUICommand RunCommand =
             new RoutedUICommand("Запуск", "RunCommand", typeof(MainWindow));
 
@@ -28,10 +28,11 @@ namespace BSTVisualizationWPF
 
         private void RunCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            SystemSounds.Asterisk.Play();
+
             _totalSteps = 6;
             _currentStep = 1;
             UpdateUI();
-
 
             lstTraversal.Items.Clear();
             lstTraversal.Items.Add("Тип обхода: Симметричный (LNR)");
@@ -41,9 +42,9 @@ namespace BSTVisualizationWPF
             txtCanvasPlaceholder.Text = "Дерево построено. Шаги активны.";
         }
 
-
         private void PrevCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            SystemSounds.Beep.Play();
             _currentStep--;
             UpdateUI();
         }
@@ -55,6 +56,7 @@ namespace BSTVisualizationWPF
 
         private void NextCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            SystemSounds.Beep.Play();
             _currentStep++;
             UpdateUI();
         }
@@ -82,6 +84,7 @@ namespace BSTVisualizationWPF
 
         private void AboutCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            SystemSounds.Asterisk.Play();
             MessageBox.Show(
                 "Бинарное дерево поиска (BST) — иерархическая структура данных.\n\n" +
                 "Свойство BST:\nЛевые потомки < Корень < Правые потомки.",
